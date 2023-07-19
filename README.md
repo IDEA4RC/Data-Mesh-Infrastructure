@@ -1,8 +1,4 @@
-# DATA MESH
-
-This mesh will be defined to be the infrastructure to hold the data, giving it an extra layer of security by creating a zero trust network to hold the databases and creating spefic role based authentication to the ETL to populate the databases.
-
-## Table of contents
+# Table of contents
 
 - [DATA MESH](#focusing-manager)
   - [Table of contents](#table-of-contents)
@@ -12,6 +8,11 @@ This mesh will be defined to be the infrastructure to hold the data, giving it a
   - [Getting help](#getting-help)
   - [License](#license)
   - [Authors and history](#authors-and-history) 
+  
+# DATA MESH
+
+This mesh will be defined to be the infrastructure to hold the data, giving it an extra layer of security by creating a zero trust network to hold the databases and creating spefic role based authentication to the ETL to populate the databases.
+
 
 ## Requirements
 
