@@ -13,6 +13,10 @@
 
 This mesh will be defined to be the infrastructure to hold the data, giving it an extra layer of security by creating a zero trust network to hold the databases and creating spefic role based authentication to the ETL to populate the databases.
 
+The followuing figure explains the database architecture contained in this mesh.
+
+![Diagram](./doc/imgs/CapsuleSchema.png)
+
 
 ## Requirements
 
@@ -111,7 +115,14 @@ Next step is to set up the istio injection in the default namespace
 kubectl label namespace default istio-injection=enabled
 ```
 
-The gateway is optional but is needed to expose the control planes for the OMOP and FHIR interfaces
+The gateway is needed to expose the control planes for the OMOP and FHIR interfaces, while using kind on a linux machine its neccesary to set up the MetalLB for load balancing the ingress gateway.
+
+First install the k8s component:
+
+```shell
+kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.13.7/config/manifests/metallb-native.yaml
+```
+Then
 
 
 
