@@ -1,7 +1,8 @@
 apiVersion: networking.istio.io/v1alpha3
 kind: Gateway
 metadata:
-  name: datamesh-gateway
+  name: idea-gateway
+  namespace: datamesh
 spec:
   selector:
     istio: ingressgateway
@@ -9,7 +10,6 @@ spec:
   - port:      
       number: 80      
       name: http      
-      protocol: HTTP
-    # TODO:      
-    # hosts:    
-    # - idea.domain.eu
+      protocol: HTTP    
+    hosts:    
+    - 127.0.0.1 # for local testing purposes

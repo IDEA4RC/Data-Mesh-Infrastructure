@@ -1,0 +1,20 @@
+apiVersion: security.istio.io/v1
+kind: AuthorizationPolicy
+metadata:
+  name: require-jwt-medic
+  namespace: datamesh
+spec:
+  selector:
+    matchLabels:
+      app: fhir-server
+  action: ALLOW
+  rules:
+  - from:
+    - source:
+        requestPrincipals: ["*"]
+    to:
+    - operation:
+        methods: ["POST"]
+    when:
+    - key: request.auth.claims[realm_access][roles]
+      values: ["Medic"]

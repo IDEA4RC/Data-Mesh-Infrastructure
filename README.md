@@ -3,7 +3,7 @@
 - [DATA MESH](#focusing-manager)
   - [Table of contents](#table-of-contents)
   - [Requirements](#requirements)
-  - [Deployment](#deployment)
+  - [Deployment](#step-by-step-deployment)
   - [Development](#development)
   - [Getting help](#getting-help)
   - [License](#license)
@@ -13,128 +13,75 @@
 
 This mesh will be defined to be the infrastructure to hold the data, giving it an extra layer of security by creating a zero trust network to hold the databases and creating spefic role based authentication to the ETL to populate the databases.
 
-The followuing figure explains the database architecture contained in this mesh.
+The following figure explains the database architecture contained in this mesh.
 
 ![Diagram](./doc/imgs/CapsuleSchema.png)
 
 
 ## Requirements
 
-## Deployment
+This deployment uses a kuberntes cluster and the recomended amount of resources is 4 CPUs and 16GB of RAM for the Istio deployment to run smoothly.
 
-For testing purposes kind will be used during the development stage.
+## Step-by-step Deployment
 
-Instaling kind with the [quick start guide](https://kind.sigs.k8s.io/docs/user/quick-start/) and the then set up the local registry for the k8s using the following script by kind community
 
-```bash
-#!/bin/sh
-set -o errexit
+After downloading Istio procced with:
 
-# 1. Create registry container unless it already exists
-reg_name='kind-registry'
-reg_port='5001'
-if [ "$(docker inspect -f '{{.State.Running}}' "${reg_name}" 2>/dev/null || true)" != 'true' ]; then
-  docker run \
-    -d --restart=always -p "127.0.0.1:${reg_port}:5000" --name "${reg_name}" \
-    registry:2
-fi
-
-# 2. Create kind cluster with containerd registry config dir enabled
-# TODO: kind will eventually enable this by default and this patch will
-# be unnecessary.
-#
-# See:
-# https://github.com/kubernetes-sigs/kind/issues/2875
-# https://github.com/containerd/containerd/blob/main/docs/cri/config.md#registry-configuration
-# See: https://github.com/containerd/containerd/blob/main/docs/hosts.md
-cat <<EOF | kind create cluster --config=-
-kind: Cluster
-apiVersion: kind.x-k8s.io/v1alpha4
-containerdConfigPatches:
-- |-
-  [plugins."io.containerd.grpc.v1.cri".registry]
-    config_path = "/etc/containerd/certs.d"
-EOF
-
-# 3. Add the registry config to the nodes
-#
-# This is necessary because localhost resolves to loopback addresses that are
-# network-namespace local.
-# In other words: localhost in the container is not localhost on the host.
-#
-# We want a consistent name that works from both ends, so we tell containerd to
-# alias localhost:${reg_port} to the registry container when pulling images
-REGISTRY_DIR="/etc/containerd/certs.d/localhost:${reg_port}"
-for node in $(kind get nodes); do
-  docker exec "${node}" mkdir -p "${REGISTRY_DIR}"
-  cat <<EOF | docker exec -i "${node}" cp /dev/stdin "${REGISTRY_DIR}/hosts.toml"
-[host."http://${reg_name}:5000"]
-EOF
-done
-
-# 4. Connect the registry to the cluster network if not already connected
-# This allows kind to bootstrap the network but ensures they're on the same network
-if [ "$(docker inspect -f='{{json .NetworkSettings.Networks.kind}}' "${reg_name}")" = 'null' ]; then
-  docker network connect "kind" "${reg_name}"
-fi
-
-# 5. Document the local registry
-# https://github.com/kubernetes/enhancements/tree/master/keps/sig-cluster-lifecycle/generic/1755-communicating-a-local-registry
-cat <<EOF | kubectl apply -f -
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: local-registry-hosting
-  namespace: kube-public
-data:
-  localRegistryHosting.v1: |
-    host: "localhost:${reg_port}"
-    help: "https://kind.sigs.k8s.io/docs/user/local-registry/"
-EOF
-
-```
-
-Next step is to set up istio
+- Install Istio and enable injection in the datamesh ns
 
 ```shell
-curl -L https://istio.io/downloadIstio | sh -
+istioctl install --set profile=demo -y 
 
-# or for a specific version (this README was written using 1.18.0)
-curl -L https://istio.io/downloadIstio | ISTIO_VERSION=1.18.0 TARGET_ARCH=x86_64 sh -
-
-
-# Add Istio to your path so it will be easier to use.
-cd istio-1.18.0/
-export PATH=$PWD/bin:$PATH
+kubectl label namespace datamesh istio-injection=enabled --overwrite
 ```
-Install Istio operator. (https://istio.io/latest/docs/setup/platform-setup/). It is installed with [001_istio-operator.yaml](./kubernetes/001_operator.yaml).
+- Set up a namespace to ensure the encapsulation of the services with mTLS. It also set the Istio sidecar injection automatically
+```shell
+kubectl apply -f kubernetes/base/001_datamesh-ns.yaml
+```
+- Now we enforce the mTLS policy along the namespace we just created
 
-Next step is to set up the istio injection in the default namespace 
+```shell 
+kubectl apply -f kubernetes/base/002_mtls-policy.yaml
+```
+- Then we apply the rest of the yamls from the previous steps but with the namespace "datamesh"
 
 ```shell
-kubectl label namespace default istio-injection=enabled
+kubectl apply -f kubernetes/fhir-services/004_postgress-secret-datamesh.yaml
+
+kubectl apply -f kubernetes/fhir-services/005_postgres-db-datamesh.yaml
+
+kubectl apply -f kubernetes/fhir-services/006_postgres-svc-datamesh.yaml
+
+kubectl apply -f kubernetes/fhir-services/007_fhir-deployment-datamesh.yaml
+
+kubectl apply -f kubernetes/fhir-services/008_fhir-server-svc.yaml
+
+kubectl apply -f kubernetes/fhir-services/009_fhir-server-vs.yaml
 ```
 
-The gateway is needed to expose the control planes for the OMOP and FHIR interfaces, while using kind on a linux machine its neccesary to set up the MetalLB for load balancing the ingress gateway.
-
-First install the k8s component:
+- Setting up the example authentication and authorization policies
 
 ```shell
-kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.13.7/config/manifests/metallb-native.yaml
+kubectl apply -f kubernetes/least-privilege-access/010_request-auth.yaml
+
+kubectl apply -f kubernetes/least-privilege-access/011_auth-policy-patient.yaml
+
+kubectl apply -f kubernetes/least-privilege-access/012_auth-policy-medic.yaml
 ```
-Then
-
-
 
 ## Development
 
+To contribute to the repo create a fork and make a pull request explaining the behaviour of the changes.
+
 ## Getting help
+
+
 
 License
 ------
 
 ```
-Copyright 2022 Universidad Politécnica de Madrid
+Copyright 2023 Universidad Politécnica de Madrid
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
