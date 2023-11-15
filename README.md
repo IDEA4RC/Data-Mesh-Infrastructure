@@ -84,7 +84,7 @@ License
 ------
 
 ```
-Copyright 2023 Universidad Politécnica de Madrid
+Copyright 2023 IDEA4RC
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
