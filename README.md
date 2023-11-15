@@ -32,16 +32,19 @@ After downloading Istio procced with:
 ```shell
 istioctl install --set profile=demo -y 
 
-kubectl label namespace datamesh istio-injection=enabled --overwrite
 ```
 - Set up a namespace to ensure the encapsulation of the services with mTLS. It also set the Istio sidecar injection automatically
 ```shell
 kubectl apply -f kubernetes/base/001_datamesh-ns.yaml
+
+kubectl label namespace datamesh istio-injection=enabled --overwrite
 ```
-- Now we enforce the mTLS policy along the namespace we just created
+- Now we enforce the mTLS policy along the namespace we just created and we create the Istio Gateway resource pointing to localhost for local development 
 
 ```shell 
 kubectl apply -f kubernetes/base/002_mtls-policy.yaml
+
+kubectl apply -f kubernetes/base/003_gateway.yaml
 ```
 - Then we apply the rest of the yamls from the previous steps but with the namespace "datamesh"
 
