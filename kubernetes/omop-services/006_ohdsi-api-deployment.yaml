@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ohdsi-apit
+  namespace: datamesh
+  labels:
+    app: ohdsi-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ohdsi-api
+  template:
+    metadata:
+      labels:
+        app: ohdsi-api
+    spec:
+      containers:
+      - name: ohdsi-api
+        image: ohdsi-api:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8080
+        env:
+          - name: OMOP_DBMS
+            valueFrom:
+            configMapKeyRef:
+              name: connection-details
+              key: OMOP_DBMS
+          - name: OMOP_SERVER
+            valueFrom:
+            configMapKeyRef:
+              name: connection-details
+              key: OMOP_SERVER
+          - name: OMOP_PORT
+            valueFrom:
+            configMapKeyRef:
+              name: connection-details
+              key: OMOP_PORT
+          - name: OMOP_USER
+            valueFrom:
+              secretKeyRef:
+                name: omop-secrets
+                key: POSTGRES_USER
+          - name: OMOP_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: omop-secrets
+                key: POSTGRES_PASSWORD
+          - name: OMOP_DATABASE
+            valueFrom:
+            configMapKeyRef:
+              name: connection-details
+              key: OMOP_DATABASE
+          - name: OMOP_SCHEMA
+            valueFrom:
+            configMapKeyRef:
+              name: connection-details
+              key: OMOP_SCHEMA

@@ -1,0 +1,29 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: populate-db-job
+  namespace: datamesh
+  
+spec:
+  ttlSecondsAfterFinished: 120
+  template:
+    spec:
+      containers:
+        - name: populate-db
+          image: omop-vocab-loader:latest
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: VOCAB_PG_HOST
+              value: omop-postgres-service
+            - name: VOCAB_PG_DATABASE
+              value: omopdb
+            - name: VOCAB_PG_USER
+              value: postgres
+            - name: VOCAB_PG_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: omop-secrets
+                  key: POSTGRES_PASSWORD
+            - name: VOCAB_PG_SCHEMA
+              value: omopcdm
+      restartPolicy: OnFailure

@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: connection-details
+data:
+  CELERY_BROKER_URL: "amqp://guest:guest@rabbitmq:5672/"
+  CELERY_RESULT_BACKEND: "db+postgresql://postgres:mysecretpassword@db/omopdb"
+  OMOP_DBMS: "postgresql"
+  OMOP_SERVER: "host.docker.internal"
+  OMOP_PORT: "5432"
+  OMOP_USER: "postgres"
+  OMOP_PASSWORD: "mysecretpassword"
+  OMOP_DATABASE: "omopdb"
+  OMOP_SCHEMA: "omopcdm"

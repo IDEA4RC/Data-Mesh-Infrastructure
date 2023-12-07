@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: omop-cdm-deployment
+  namespace: datamesh
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: omop-postgres
+  template:
+    metadata:
+      labels:
+        app: omop-postgres
+    spec:
+      containers:
+        - name: omop-postgres
+          image: omop-cdm-postgres:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_USER
+              value: postgres
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: omop-secrets
+                  key: POSTGRES_PASSWORD
+            - name: POSTGRES_DB
+              value: omopdb
