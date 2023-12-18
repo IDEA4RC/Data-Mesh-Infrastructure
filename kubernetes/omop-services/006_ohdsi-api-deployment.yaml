@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: ohdsi-apit
+  name: ohdsi-api
   namespace: datamesh
   labels:
     app: ohdsi-api
@@ -24,19 +24,19 @@ spec:
         env:
           - name: OMOP_DBMS
             valueFrom:
-            configMapKeyRef:
-              name: connection-details
-              key: OMOP_DBMS
+              configMapKeyRef:
+                name: connection-details
+                key: OMOP_DBMS
           - name: OMOP_SERVER
             valueFrom:
-            configMapKeyRef:
-              name: connection-details
-              key: OMOP_SERVER
+              configMapKeyRef:
+                name: connection-details
+                key: OMOP_SERVER
           - name: OMOP_PORT
             valueFrom:
-            configMapKeyRef:
-              name: connection-details
-              key: OMOP_PORT
+              configMapKeyRef:
+                name: connection-details
+                key: OMOP_PORT
           - name: OMOP_USER
             valueFrom:
               secretKeyRef:
@@ -49,11 +49,11 @@ spec:
                 key: POSTGRES_PASSWORD
           - name: OMOP_DATABASE
             valueFrom:
-            configMapKeyRef:
-              name: connection-details
-              key: OMOP_DATABASE
+              configMapKeyRef:
+                name: connection-details
+                key: OMOP_DATABASE
           - name: OMOP_SCHEMA
             valueFrom:
-            configMapKeyRef:
-              name: connection-details
-              key: OMOP_SCHEMA
+                configMapKeyRef:
+                  name: connection-details
+                  key: OMOP_SCHEMA
