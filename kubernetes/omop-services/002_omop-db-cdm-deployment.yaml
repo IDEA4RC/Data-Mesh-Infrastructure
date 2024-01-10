@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: omop-cdm-deployment
+  name: omop-cdm-db
   namespace: datamesh
 spec:
   replicas: 1
@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: omop-postgres
-          image: omop-cdm-postgres:latest
+          image: ghcr.io/idea4rc/omop-deploy:latest
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 5432

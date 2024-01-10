@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: ohdsi-api
-        image: ohdsi-api:latest
+        image: harbor2.vantage6.ai/infrastructure/ohdsi-api:latest
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8080

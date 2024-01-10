@@ -10,15 +10,18 @@ spec:
     spec:
       containers:
         - name: populate-db
-          image: omop-vocab-loader:latest
+          image: ghcr.io/idea4rc/omop-vocab-uploader:latest
           imagePullPolicy: IfNotPresent
           env:
             - name: VOCAB_PG_HOST
-              value: omop-postgres-service
+              value: omop-postgres-service.datamesh.svc.cluster.local
             - name: VOCAB_PG_DATABASE
               value: omopdb
             - name: VOCAB_PG_USER
-              value: postgres
+              valueFrom:
+                secretKeyRef:
+                  name: omop-secrets
+                  key: POSTGRES_USER
             - name: VOCAB_PG_PASSWORD
               valueFrom:
                 secretKeyRef:

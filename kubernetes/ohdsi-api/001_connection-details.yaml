@@ -5,7 +5,7 @@ metadata:
   namespace: datamesh
 data:
   CELERY_BROKER_URL: "amqp://guest:guest@rabbitmq:5672/"
-  CELERY_RESULT_BACKEND: "db+postgresql://postgres:mysecretpassword@db/omopdb"
+  CELERY_RESULT_BACKEND: "db+postgresql://postgres:mysecretpassword@omop-postgres-service.datamesh.svc.cluster.local/omopdb"
   OMOP_DBMS: "postgresql"
   OMOP_SERVER: "host.docker.internal"
   OMOP_PORT: "5432"

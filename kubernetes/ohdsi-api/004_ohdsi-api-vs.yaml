@@ -16,6 +16,6 @@ spec:
         uri: "/"
     route:
     - destination:
-        host: ohdsi-api.default.svc.cluster.local
+        host: ohdsi-api.datamesh.svc.cluster.local
         port:
           number: 8000
