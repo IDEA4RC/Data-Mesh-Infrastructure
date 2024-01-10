@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: celery-worker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: celery-worker
+  template:
+    metadata:
+      labels:
+        app: celery-worker
+    spec:
+      containers:
+      - name: celery-worker
+        image: harbor2.vantage6.ai/infrastructure/ohdsi-api:latest
+        command: ["celery", "-A", "api.celery_app", "worker", "-l", "DEBUG", "-P", "solo"]
+        env:
+          - name: CELERY_BROKER_URL
+            valueFrom:
+              configMapKeyRef:
+                name: connection-details
+                key: CELERY_BROKER_URL
+          - name: CELERY_RESULT_BACKEND
+            valueFrom:
+              configMapKeyRef:
+                name: connection-details
+                key: CELERY_RESULT_BACKEND
+          - name: OMOP_DBMS
+            valueFrom:
+              configMapKeyRef:
+                name: connection-details
+                key: OMOP_DBMS
+          - name: OMOP_SERVER
+            valueFrom:
+              configMapKeyRef:
+                name: connection-details
+                key: OMOP_SERVER
+          - name: OMOP_PORT
+            valueFrom:
+              configMapKeyRef:
+                name: connection-details
+                key: OMOP_PORT
+          - name: OMOP_USER
+            valueFrom:
+              secretKeyRef:
+                name: omop-secrets
+                key: POSTGRES_USER
+          - name: OMOP_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: omop-secrets
+                key: POSTGRES_PASSWORD
+          - name: OMOP_DATABASE
+            valueFrom:
+              configMapKeyRef:
+                name: connection-details
+                key: OMOP_DATABASE
+          - name: OMOP_SCHEMA
+            valueFrom:
+                configMapKeyRef:
+                  name: connection-details
+                  key: OMOP_SCHEMA
