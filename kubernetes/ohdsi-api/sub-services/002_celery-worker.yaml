@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: celery-worker
+  namespace: datamesh
 spec:
   replicas: 1
   selector:
@@ -27,38 +28,36 @@ spec:
               configMapKeyRef:
                 name: connection-details
                 key: CELERY_RESULT_BACKEND
-          - name: OMOP_DBMS
+          - name: POSTGRES_PASSWORD
             valueFrom:
               configMapKeyRef:
                 name: connection-details
-                key: OMOP_DBMS
-          - name: OMOP_SERVER
-            valueFrom:
-              configMapKeyRef:
-                name: connection-details
-                key: OMOP_SERVER
-          - name: OMOP_PORT
-            valueFrom:
-              configMapKeyRef:
-                name: connection-details
-                key: OMOP_PORT
-          - name: OMOP_USER
-            valueFrom:
-              secretKeyRef:
-                name: omop-secrets
-                key: POSTGRES_USER
-          - name: OMOP_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: omop-secrets
                 key: POSTGRES_PASSWORD
-          - name: OMOP_DATABASE
+          - name: POSTGRES_USER
             valueFrom:
               configMapKeyRef:
                 name: connection-details
-                key: OMOP_DATABASE
-          - name: OMOP_SCHEMA
+                key: POSTGRES_USER
+          - name: POSTGRES_DB
             valueFrom:
-                configMapKeyRef:
-                  name: connection-details
-                  key: OMOP_SCHEMA
+              configMapKeyRef:
+                name: connection-details
+                key: POSTGRES_DB
+          
+---
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: celery-service
+  namespace: datamesh
+spec:
+  selector:
+    app: celery-worker
+  ports:
+    - protocol: TCP
+      port: 5672
+      targetPort: 5672
+    - protocol: TCP
+      port: 15672
+      targetPort: 15672
