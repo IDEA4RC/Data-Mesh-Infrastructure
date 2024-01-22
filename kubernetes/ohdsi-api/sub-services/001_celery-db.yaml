@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres-deployment
+  namespace: datamesh
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: celery-db
+  template:
+    metadata:
+      labels:
+        app: celery-db
+    spec:
+      containers:
+      - name: celery-db
+        image: postgres:latest
+        ports:
+          - containerPort: 5432
+        env:
+          - name: POSTGRES_USER
+            valueFrom:
+              configMapKeyRef:
+                name: connection-details
+                key: POSTGRES_USER
+          - name: POSTGRES_PASSWORD
+            valueFrom:
+              configMapKeyRef:
+                name: connection-details
+                key: POSTGRES_PASSWORD
+          - name: POSTGRES_DB
+            valueFrom:
+              configMapKeyRef:
+                name: connection-details
+                key: POSTGRES_DB
+        
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: celery-db-service
+spec:
+  selector:
+    app: celery-db
+  ports:
+    - protocol: TCP
+      port: 5432
+      targetPort: 5432

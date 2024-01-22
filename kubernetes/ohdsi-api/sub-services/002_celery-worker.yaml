@@ -45,19 +45,3 @@ spec:
                 key: POSTGRES_DB
           
 ---
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: celery-service
-  namespace: datamesh
-spec:
-  selector:
-    app: celery-worker
-  ports:
-    - protocol: TCP
-      port: 5672
-      targetPort: 5672
-    - protocol: TCP
-      port: 15672
-      targetPort: 15672

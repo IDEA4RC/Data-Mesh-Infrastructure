@@ -5,7 +5,7 @@ metadata:
   namespace: datamesh
 spec:
   selector:
-    app: omop-postgres
+    app: ohdsi-api
   ports:
     - protocol: TCP
       port: 8000
