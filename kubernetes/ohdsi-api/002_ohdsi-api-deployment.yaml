@@ -22,6 +22,31 @@ spec:
         ports:
         - containerPort: 8080
         env:
+          - name: CELERY_BROKER_URL
+            valueFrom:
+              configMapKeyRef:
+                name: connection-details
+                key: CELERY_BROKER_URL
+          - name: CELERY_RESULT_BACKEND
+            valueFrom:
+              configMapKeyRef:
+                name: connection-details
+                key: CELERY_RESULT_BACKEND
+          - name: POSTGRES_PASSWORD
+            valueFrom:
+              configMapKeyRef:
+                name: connection-details
+                key: POSTGRES_PASSWORD
+          - name: POSTGRES_USER
+            valueFrom:
+              configMapKeyRef:
+                name: connection-details
+                key: POSTGRES_USER
+          - name: POSTGRES_DB
+            valueFrom:
+              configMapKeyRef:
+                name: connection-details
+                key: POSTGRES_DB
           - name: OMOP_DBMS
             valueFrom:
               configMapKeyRef:
