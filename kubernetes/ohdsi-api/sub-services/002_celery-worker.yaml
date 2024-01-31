@@ -79,15 +79,3 @@ spec:
                   name: connection-details
                   key: OMOP_SCHEMA
           
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: celery-db-service
-spec:
-  selector:
-    app: celery-db
-  ports:
-    - protocol: TCP
-      port: 5432
-      targetPort: 5432

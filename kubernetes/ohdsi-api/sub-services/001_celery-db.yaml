@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: postgres-deployment
+  name: celery-db
   namespace: datamesh
 spec:
   replicas: 1
@@ -40,6 +40,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: celery-db-service
+  namespace: datamesh
 spec:
   selector:
     app: celery-db
