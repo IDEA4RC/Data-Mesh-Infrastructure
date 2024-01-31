@@ -46,30 +46,34 @@ kubectl apply -f kubernetes/base/002_mtls-policy.yaml
 
 kubectl apply -f kubernetes/base/003_gateway.yaml
 ```
-- Then we apply the rest of the yamls from the previous steps but with the namespace "datamesh"
+### FHIR Server
+- We can apply all the files in the [hir-services](f) folder:
 
 ```shell
-kubectl apply -f kubernetes/fhir-services/004_postgress-secret-datamesh.yaml
+kubectl apply -f kubernetes/fhir-services/
+```
+### OMOP 
 
-kubectl apply -f kubernetes/fhir-services/005_postgres-db-datamesh.yaml
+Setting up OMOP is done by creating first a postgres DB and the populating it with the vocabularies for the project. More info in [this repo](https://github.com/IDEA4RC/OMOP-Automatic-Deploy).
 
-kubectl apply -f kubernetes/fhir-services/006_postgres-svc-datamesh.yaml
-
-kubectl apply -f kubernetes/fhir-services/007_fhir-deployment-datamesh.yaml
-
-kubectl apply -f kubernetes/fhir-services/008_fhir-server-svc.yaml
-
-kubectl apply -f kubernetes/fhir-services/009_fhir-server-vs.yaml
+```shell
+kubectl apply -f kubernetes/omop-services/
 ```
 
-- Setting up the example authentication and authorization policies
+OHDSI API
+
+This API will anable the communication of the capsule with the Vantage 6 nodes and server.
+
+In order to install it first a number of services must be installed to work together with the API. These are dependant of a config map that contains the connection details. (Note that the passwords must be changed in a production enviroment)
 
 ```shell
-kubectl apply -f kubernetes/least-privilege-access/010_request-auth.yaml
+kubectl apply -f kubernetes/ohdsi-api/001_connection-details.yaml
 
-kubectl apply -f kubernetes/least-privilege-access/011_auth-policy-patient.yaml
+kubectl apply -f kubernetes/ohdsi-api/sub-services/
 
-kubectl apply -f kubernetes/least-privilege-access/012_auth-policy-medic.yaml
+kubectl apply -f kubernetes/omop-services/002_omop-db-cdm-deployment.yaml
+kubectl apply -f kubernetes/omop-services/003_omop-db-svc-datamesh.yaml
+kubectl apply -f kubernetes/omop-services/004_omop-vocab-job.yaml
 ```
 
 ## Development
@@ -78,6 +82,7 @@ To contribute to the repo create a fork and make a pull request explaining the b
 
 ## Getting help
 
+Feel free to create an issue if some bugs are detected or you need help.
 
 
 License
