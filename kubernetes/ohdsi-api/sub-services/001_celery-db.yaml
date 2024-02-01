@@ -19,21 +19,66 @@ spec:
         ports:
           - containerPort: 5432
         env:
-          - name: POSTGRES_USER
+          - name: CELERY_BROKER_URL
             valueFrom:
               configMapKeyRef:
                 name: connection-details
-                key: POSTGRES_USER
+                key: CELERY_BROKER_URL
+          - name: CELERY_RESULT_BACKEND
+            valueFrom:
+              configMapKeyRef:
+                name: connection-details
+                key: CELERY_RESULT_BACKEND
           - name: POSTGRES_PASSWORD
             valueFrom:
               configMapKeyRef:
                 name: connection-details
                 key: POSTGRES_PASSWORD
+          - name: POSTGRES_USER
+            valueFrom:
+              configMapKeyRef:
+                name: connection-details
+                key: POSTGRES_USER
           - name: POSTGRES_DB
             valueFrom:
               configMapKeyRef:
                 name: connection-details
                 key: POSTGRES_DB
+          - name: OMOP_DBMS
+            valueFrom:
+              configMapKeyRef:
+                name: connection-details
+                key: OMOP_DBMS
+          - name: OMOP_SERVER
+            valueFrom:
+              configMapKeyRef:
+                name: connection-details
+                key: OMOP_SERVER
+          - name: OMOP_PORT
+            valueFrom:
+              configMapKeyRef:
+                name: connection-details
+                key: OMOP_PORT
+          - name: OMOP_USER
+            valueFrom:
+              secretKeyRef:
+                name: omop-secrets
+                key: POSTGRES_USER
+          - name: OMOP_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: omop-secrets
+                key: POSTGRES_PASSWORD
+          - name: OMOP_DATABASE
+            valueFrom:
+              configMapKeyRef:
+                name: connection-details
+                key: OMOP_DATABASE
+          - name: OMOP_SCHEMA
+            valueFrom:
+                configMapKeyRef:
+                  name: connection-details
+                  key: OMOP_SCHEMA
         
 ---
 apiVersion: v1
@@ -46,5 +91,5 @@ spec:
     app: celery-db
   ports:
     - protocol: TCP
-      port: 5432
+      port: 5454
       targetPort: 5432

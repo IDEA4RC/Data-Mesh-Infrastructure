@@ -47,7 +47,7 @@ kubectl apply -f kubernetes/base/002_mtls-policy.yaml
 kubectl apply -f kubernetes/base/003_gateway.yaml
 ```
 ### FHIR Server
-- We can apply all the files in the [hir-services](f) folder:
+- We can apply all the files in the [hir-services](./kubernetes/fhir-services) folder:
 
 ```shell
 kubectl apply -f kubernetes/fhir-services/
@@ -60,7 +60,7 @@ Setting up OMOP is done by creating first a postgres DB and the populating it wi
 kubectl apply -f kubernetes/omop-services/
 ```
 
-OHDSI API
+### OHDSI API
 
 This API will anable the communication of the capsule with the Vantage 6 nodes and server.
 
