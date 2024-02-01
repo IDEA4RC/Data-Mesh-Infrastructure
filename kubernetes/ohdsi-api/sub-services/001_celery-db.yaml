@@ -74,11 +74,11 @@ spec:
               configMapKeyRef:
                 name: connection-details
                 key: OMOP_DATABASE
-          - name: OMOP_SCHEMA
+          - name: OMOP_CDM_SCHEMA
             valueFrom:
                 configMapKeyRef:
                   name: connection-details
-                  key: OMOP_SCHEMA
+                  key: OMOP_CDM_SCHEMA
         
 ---
 apiVersion: v1

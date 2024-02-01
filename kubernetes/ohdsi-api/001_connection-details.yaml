@@ -17,4 +17,4 @@ data:
   OMOP_USER: "postgres"
   OMOP_PASSWORD: "mysecretpassword"
   OMOP_DATABASE: "omopdb"
-  OMOP_SCHEMA: "omopcdm"
+  OMOP_CDM_SCHEMA: "omopcdm"
