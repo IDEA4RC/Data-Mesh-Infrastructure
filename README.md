@@ -27,19 +27,17 @@ This deployment uses a kuberntes cluster and the recomended amount of resources 
 
 After downloading Istio procced with:
 
-- Install Istio and enable injection in the datamesh ns
+Install Istio and enable injection in the datamesh ns
 
 ```shell
 istioctl install --set profile=demo -y 
 
 ```
-- Set up a namespace to ensure the encapsulation of the services with mTLS. It also set the Istio sidecar injection automatically
+Set up a namespace to ensure the encapsulation of the services with mTLS. It also set the Istio sidecar injection automatically
 ```shell
 kubectl apply -f kubernetes/base/001_datamesh-ns.yaml
-
-kubectl label namespace datamesh istio-injection=enabled --overwrite
 ```
-- Now we enforce the mTLS policy along the namespace we just created and we create the Istio Gateway resource pointing to localhost for local development 
+Now we enforce the mTLS policy along the namespace we just created and we create the Istio Gateway resource pointing to localhost for local development 
 
 ```shell 
 kubectl apply -f kubernetes/base/002_mtls-policy.yaml
@@ -47,7 +45,7 @@ kubectl apply -f kubernetes/base/002_mtls-policy.yaml
 kubectl apply -f kubernetes/base/003_gateway.yaml
 ```
 ### FHIR Server
-- We can apply all the files in the [hir-services](./kubernetes/fhir-services) folder:
+We can apply all the files in the [hir-services](./kubernetes/fhir-services) folder at the same time by doing:
 
 ```shell
 kubectl apply -f kubernetes/fhir-services/
@@ -59,6 +57,15 @@ Setting up OMOP is done by creating first a postgres DB and the populating it wi
 ```shell
 kubectl apply -f kubernetes/omop-services/
 ```
+Wait for the Job that populates the OMOP database before continuing to the next step.
+Once the pod `populate-db` is finished it will show:
+```shell
+NAME                             READY   STATUS    RESTARTS       AGE
+omop-cdm-db-xxx                  2/2     Running    0             x
+populate-db-xxx                  1/2     NotReady   1             x
+```
+
+And by looking to the logs it will show `All done, shutting down. Feel free to remove container.`
 
 ### OHDSI API
 

@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: postgres-db
+  name: fhir-db
   namespace: datamesh
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: postgres-db
+      app: fhir-db
   template:
     metadata:
       labels:
-        app: postgres-db
+        app: fhir-db
     spec:
       containers:
-        - name: postgres-db
+        - name: fhir-db
           image: postgres:latest
           ports:
             - containerPort: 5432
