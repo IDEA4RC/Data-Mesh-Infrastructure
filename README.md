@@ -4,6 +4,10 @@
   - [Table of contents](#table-of-contents)
   - [Requirements](#requirements)
   - [Deployment](#step-by-step-deployment)
+      - [FHIR](#fhir-server)
+      - [OMOP](#omop)
+      - [OHDSI-API](#ohdsi-api)
+  - [Test deployment](#test-deployment)
   - [Development](#development)
   - [Getting help](#getting-help)
   - [License](#license)
@@ -78,10 +82,15 @@ kubectl apply -f kubernetes/ohdsi-api/001_connection-details.yaml
 
 kubectl apply -f kubernetes/ohdsi-api/sub-services/
 
-kubectl apply -f kubernetes/omop-services/002_omop-db-cdm-deployment.yaml
-kubectl apply -f kubernetes/omop-services/003_omop-db-svc-datamesh.yaml
-kubectl apply -f kubernetes/omop-services/004_omop-vocab-job.yaml
+kubectl apply -f kubernetes/ohdsi-api/002_ohdsi-api-deployment.yaml
+kubectl apply -f kubernetes/ohdsi-api/003_ohdsi-api-svc.yaml
+kubectl apply -f kubernetes/ohdsi-api/004_ohdsi-api-vs.yaml
 ```
+
+## Test deployment
+
+In o
+
 
 ## Development
 
