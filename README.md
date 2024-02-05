@@ -8,6 +8,7 @@
       - [OMOP](#omop)
       - [OHDSI-API](#ohdsi-api)
   - [Test deployment](#test-deployment)
+  - [Clean Up](#clean-up)
   - [Development](#development)
   - [Getting help](#getting-help)
   - [License](#license)
@@ -127,6 +128,27 @@ With the expected output being somenthing similar to:
         }
     ]
 }
+```
+## Clean up
+
+Follow the steps to clean up
+
+```bash
+kubectl delete -f ./kubernetes/fhir-services
+
+kubectl delete -f ./kubernetes/omop-services
+
+kubectl delete -f ./kubernetes/ohdsi-api/sub-services
+
+kubectl delete -f ./kubernetes/omop-services
+
+kubectl delete -f ./kubernetes/ohdsi-api
+
+kubectl delete -f ./kubernetes/base
+
+istioctl uninstall --purge -y
+
+kubectl delete namespace istio-system
 ```
 
 ## Development
