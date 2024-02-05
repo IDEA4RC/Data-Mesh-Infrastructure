@@ -89,8 +89,45 @@ kubectl apply -f kubernetes/ohdsi-api/004_ohdsi-api-vs.yaml
 
 ## Test deployment
 
-In o
+In order to test the endpoints available first we should check that the OHDSI API services are up and running:
+This deploymnet works in the local machine network `127.0.0.1`. We assume the same configuration for the testing.
 
+The `/ohdsi-api` endpoint can be tested by:
+```shell
+curl http://127.0.0.1/ohdsi-api/health
+```
+With the expected output:
+```json
+{
+    "API": "ok",
+    "database": "ok",
+    "celery": "ok",
+    "celery_backend": "ok"
+}
+```
+The `/fhir` endpoint can be tested by doing a simple request to the Patient resource:
+
+```shell
+curl http://127.0.0.1/fhir/Patient
+```
+With the expected output being somenthing similar to:
+```json
+{
+    "resourceType": "Bundle",
+    "id": "f61fed84-f65d-4ff2-8316-27f9185e3671",
+    "meta": {
+        "lastUpdated": "2024-02-05T10:52:59.517+00:00"
+    },
+    "type": "searchset",
+    "total": 0,
+    "link": [
+        {
+            "relation": "self",
+            "url": "http://127.0.0.1/fhir/Patient"
+        }
+    ]
+}
+```
 
 ## Development
 
