@@ -1,13 +1,26 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: omop-postgres-service
+  name: omop-external
   namespace: datamesh
 spec:
   selector:
     app: omop-postgres
   ports:
-    - protocol: TCP
-      port: 5432
-      targetPort: 5432
-  type: ClusterIP
+  - port: 5432
+    name: omop-external
+    appProtocol: tcp
+---
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: omop-postgres-service
+#   namespace: datamesh
+# spec:
+#   selector:
+#     app: omop-postgres
+#   ports:
+#     - protocol: TCP
+#       port: 5432
+#       targetPort: 5432
+#   type: ClusterIP

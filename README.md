@@ -9,6 +9,7 @@
       - [OHDSI-API](#ohdsi-api)
   - [Test deployment](#test-deployment)
   - [Clean Up](#clean-up)
+  - [UPM Deployment](#upm-deployment-guide)
   - [Development](#development)
   - [Getting help](#getting-help)
   - [License](#license)
@@ -149,6 +150,40 @@ kubectl delete -f ./kubernetes/base
 istioctl uninstall --purge -y
 
 kubectl delete namespace istio-system
+```
+
+## UPM deployment guide
+
+The OMOP database is inside the mesh and it should not be accessed but we have to util the kubernetes deployment of vantage is ready. We'll expose the database through the istio gateway but only in the local network. For that we apply the [IstioOperator](kubernetes/temp-deployment/001_IstioOperator.yaml).
+
+```shell
+istioctl install -f kubernetes/temp-deployment/001_IstioOperator.yaml
+```
+
+Then we create the namespace and the mTLS space
+
+```shell
+kubectl apply -f kubernetes/base/001_datamesh-ns.yaml
+kubectl apply -f kubernetes/base/002_mtls-policy.yaml
+```
+Then we'll use a different gateway for this setup
+
+```shell
+kubectl apply -f kubernetes/temp-deployment/002_gateway.yaml
+```
+
+Then we'll enable the sidecart injection 
+```shell
+kubectl label namespace datamesh istio-injection=enabled --overwrite
+
+# To test that is enabled
+kubectl get namespace -L istio-injection
+```
+
+Then we procced to install the OMOP database
+
+```shell
+kubectl apply -f kubernetes/omop-services/
 ```
 
 ## Development
