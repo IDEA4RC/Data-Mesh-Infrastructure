@@ -14,7 +14,7 @@ spec:
           imagePullPolicy: IfNotPresent
           env:
             - name: VOCAB_PG_HOST
-              value: omop-postgres-service.datamesh.svc.cluster.local
+              value: omop-postgres.datamesh.svc.cluster.local
             - name: VOCAB_PG_DATABASE
               value: omopdb
             - name: VOCAB_PG_USER

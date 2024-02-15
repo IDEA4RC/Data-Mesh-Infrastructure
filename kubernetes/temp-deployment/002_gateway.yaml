@@ -7,15 +7,15 @@ spec:
   selector:
     istio: ingressgateway
   servers:
-  - port:      
-      number: 80      
-      name: http      
-      protocol: HTTP    
-    hosts:    
-    - host01.idea.lst.tfo.upm.es
   - port:
       number: 5432
       name: postgres
       protocol: TCP
     hosts:
-    - 138.4.10.229
+    - host01.idea.lst.tfo.upm.es
+  - port:
+      number: 80
+      name: http
+      protocol: HTTP
+    hosts:
+    - host01.idea.lst.tfo.upm.es

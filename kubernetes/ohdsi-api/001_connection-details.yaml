@@ -12,7 +12,7 @@ data:
   POSTGRES_DB: "ohdsi"
   
   OMOP_DBMS: "postgresql"
-  OMOP_SERVER: "omop-postgres-service.datamesh.svc.cluster.local"
+  OMOP_SERVER: "omop-postgres.datamesh.svc.cluster.local"
   OMOP_PORT: "5432"
   OMOP_USER: "postgres"
   OMOP_PASSWORD: "mysecretpassword"

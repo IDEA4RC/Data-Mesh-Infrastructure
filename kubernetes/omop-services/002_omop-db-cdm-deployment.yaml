@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: omop-cdm-db
+  name: omop-postgres
   namespace: datamesh
 spec:
   replicas: 1
