@@ -1,6 +1,6 @@
 # Table of contents
 
-- [DATA MESH](#focusing-manager)
+- [DATA MESH](#data-mesh)
   - [Table of contents](#table-of-contents)
   - [Requirements](#requirements)
   - [Deployment](#step-by-step-deployment)
